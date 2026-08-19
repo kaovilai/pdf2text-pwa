@@ -358,8 +358,16 @@
         }
       });
 
+      const onWindowLoad = (callback) => {
+        if (document.readyState === "complete") {
+          callback();
+        } else {
+          window.addEventListener("load", callback);
+        }
+      };
+
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
+        onWindowLoad(() => {
           navigator.serviceWorker
             .register("sw.js")
             .catch((error) => console.error("Service worker registration failed:", error));
@@ -367,7 +375,7 @@
       }
 
       if (new URLSearchParams(window.location.search).get("action") === "new") {
-        window.addEventListener("load", () => fileInput.click());
+        onWindowLoad(() => fileInput.click());
       }
     </script>
   </head>
@@ -392,7 +400,7 @@
         </p>
         <p>
           Free and open source:
-          <a href="https://github.com/racosa/pdf2text-ocr">Github</a>
+          <a href="https://github.com/racosa/pdf2text-ocr">GitHub</a>
         </p>
       </header>
 

@@ -47,11 +47,15 @@ self.addEventListener("fetch", (event) => {
             const responseClone = response.clone();
             caches
               .open(CACHE_NAME)
-              .then((cache) => cache.put(event.request, responseClone));
+              .then((cache) => cache.put(event.request, responseClone))
+              .catch((error) => console.error("Cache put failed:", error));
           }
           return response;
         })
-        .catch(() => cached);
+        .catch((error) => {
+          if (cached) return cached;
+          throw error;
+        });
       return cached || fetchPromise;
     })
   );
